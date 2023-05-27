@@ -199,3 +199,4 @@ app_license = "MIT"
 # auth_hooks = [
 #	"hlp1.auth.validate"
 # ]
+required_apps = ["erpnext"]

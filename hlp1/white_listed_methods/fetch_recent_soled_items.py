@@ -9,7 +9,7 @@ def fetch_recent_soled_items():
         """
         select 
             `tabSales Invoice Item`.name, `tabSales Invoice Item`.parent,
-            `tabSales Invoice`.posting_date,
+            `tabSales Invoice`.posting_date,`tabSales Invoice`.customer_name,
             `tabSales Invoice Item`.item_code,`tabSales Invoice Item`.`item_name`,
             `tabSales Invoice Item`.rate
         from `tabSales Invoice`, `tabSales Invoice Item`

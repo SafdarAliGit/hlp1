@@ -971,9 +971,9 @@ frappe.ui.form.on('Sales Invoice', {
                     if (!r.exc) {
                         var rate = r.message;
                        var  s = ''
-                        s = '<table class="table table-dark table-bordered" style="color:#fff;"> <tr><th>Invoice #</th><th>Posting Date</th><th>Rate</th></tr>'
+                        s = '<table class="table table-dark table-bordered" style="color:#fff;"> <tr><th>Customer</th><th>Invoice #</th><th>Posting Date</th><th>Rate</th></tr>'
                         r.message.forEach(function (item){
-                          s +=  `<tr> <td> ${item['parent']}</td> <td> ${item['posting_date']}</td> <td> ${item['rate']}</td></tr>`
+                          s +=  `<tr> <td>${item['customer_name']}</td><td> ${item['parent']}</td> <td> ${item['posting_date']}</td> <td> ${item['rate']}</td></tr>`
                         })
                         s +='</table>'
                         msgprint('<b>Rate Information of last 5 sales</b>'

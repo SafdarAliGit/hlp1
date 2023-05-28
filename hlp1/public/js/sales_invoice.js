@@ -1100,7 +1100,7 @@ frappe.ui.form.on('Sales Invoice Item', {
                         })
                         s +='</table>'
                         if(r.message.length > 0){
-                        msgprint('<b>Rate Information of last 5 sales</b>'
+                        msgprint(`<b>Rate Information of <u style="font-weight: bolder;font-size: 17px;">${d.item_name} </u> for last 5 sales</b>`
                             +'<hr>'
                             + s
                         )

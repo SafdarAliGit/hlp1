@@ -14,7 +14,7 @@ def fetch_recent_soled_items():
             `tabSales Invoice Item`.rate
         from `tabSales Invoice`, `tabSales Invoice Item`
         where `tabSales Invoice`.name = `tabSales Invoice Item`.parent
-            and `tabSales Invoice`.docstatus = 1
+            and `tabSales Invoice`.docstatus = 1 order by `tabSales Invoice Item`.parent
         """,
         as_dict=1
     )[:5]

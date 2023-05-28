@@ -617,6 +617,7 @@ cur_frm.set_query("asset", "items", function (doc, cdt, cdn) {
 
 frappe.ui.form.on('Sales Invoice', {
 
+
     setup: function (frm) {
 
         frm.add_fetch('customer', 'tax_id', 'tax_id');
@@ -960,34 +961,7 @@ frappe.ui.form.on('Sales Invoice', {
     },
 
     refresh: function (frm) {
-        // CUSTOM FUNCTION TO FECTCH RECENT SOLD ITEMS
-        frm.add_custom_button(__("Fetch Rates"), function () {
-            frappe.call({
-                method: 'hlp1.white_listed_methods.fetch_recent_soled_items.fetch_recent_soled_items',
-                // args: {
-                //     'cargo_code': nature_of_cargo,
-                // },
-                callback: function (r) {
-                    if (!r.exc) {
-                        var rate = r.message;
-                       var  s = ''
-                        s = '<table class="table table-dark table-bordered" style="color:#fff;"> <tr><th>Customer</th><th>Invoice #</th><th>Posting Date</th><th>Rate</th></tr>'
-                        r.message.forEach(function (item){
-                          s +=  `<tr> <td>${item['customer_name']}</td><td> ${item['parent']}</td> <td> ${item['posting_date']}</td> <td> ${item['rate']}</td></tr>`
-                        })
-                        s +='</table>'
-                        msgprint('<b>Rate Information of last 5 sales</b>'
-                            +'<hr>'
-                            + s
-                        )
 
-
-                    }
-                }
-            });
-
-        });
-        // CUSTOM FUNCTION TO FECTCH RECENT SOLD ITEMS END
 
         if (frm.doc.docstatus === 0 && !frm.doc.is_return) {
             frm.add_custom_button(__("Fetch Timesheet"), function () {
@@ -1105,3 +1079,46 @@ var select_loyalty_program = function (frm, loyalty_programs) {
 
     dialog.show();
 }
+
+frappe.ui.form.on('Sales Invoice Item', {
+
+            // CUSTOM FUNCTION TO FECTCH RECENT SOLD ITEMS
+            rates: function(frm,cdt,cdn){
+                var d = locals[cdt][cdn];
+                if (d.item_code){
+                                frappe.call({
+                method: 'hlp1.white_listed_methods.fetch_recent_soled_items.fetch_recent_soled_items',
+                args: {
+                    'item_code': d.item_code,
+                },
+                callback: function (r) {
+                    if (!r.exc) {
+                       var  s = ''
+                        s = '<table class="table table-dark table-bordered" style="color:#fff;"> <tr><th>Customer</th><th>Invoice #</th><th>Posting Date</th><th>Rate</th></tr>'
+                        r.message.forEach(function (item){
+                          s +=  `<tr> <td>${item['customer_name']}</td><td> ${item['parent']}</td> <td> ${item['posting_date']}</td> <td> ${item['rate']}</td></tr>`
+                        })
+                        s +='</table>'
+                        if(r.message.length > 0){
+                        msgprint('<b>Rate Information of last 5 sales</b>'
+                            +'<hr>'
+                            + s
+                        )
+                            }else {
+                            msgprint(__("Rates Not present"));
+                        }
+
+
+                    }
+                }
+            });
+                }else {
+                    msgprint(__("Item Not selected"));
+                }
+
+            },
+
+
+
+        // CUSTOM FUNCTION TO FECTCH RECENT SOLD ITEMS END
+});

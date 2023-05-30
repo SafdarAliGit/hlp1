@@ -1082,43 +1082,52 @@ var select_loyalty_program = function (frm, loyalty_programs) {
 
 frappe.ui.form.on('Sales Invoice Item', {
 
-            // CUSTOM FUNCTION TO FECTCH RECENT SOLD ITEMS
-            rates: function(frm,cdt,cdn){
-                var d = locals[cdt][cdn];
-                if (d.item_code){
-                                frappe.call({
+    // CUSTOM FUNCTION TO FECTCH RECENT SOLD ITEMS
+    rates: function (frm, cdt, cdn) {
+        var d = locals[cdt][cdn];
+        if (d.item_code) {
+            frappe.call({
                 method: 'hlp1.white_listed_methods.fetch_recent_soled_items.fetch_recent_soled_items',
                 args: {
                     'item_code': d.item_code,
                 },
                 callback: function (r) {
                     if (!r.exc) {
-                       var  s = ''
-                        s = '<table class="table table-dark table-bordered" style="color:#fff;"> <tr><th>Customer</th><th>Invoice #</th><th>Posting Date</th><th>Rate</th></tr>'
-                        r.message.forEach(function (item){
-                          s +=  `<tr> <td>${item['customer_name']}</td><td> ${item['parent']}</td> <td> ${item['posting_date']}</td> <td> ${item['rate']}</td></tr>`
+                        var s = ''
+                        s = '<h5>Sales Rates</h5>'
+                        s += '<table class="table table-dark table-bordered" style="color:#fff;"> <tr><th>Customer</th><th>Invoice #</th><th>Posting Date</th><th>Rate</th></tr>'
+                        r.message.sales_history.forEach(function (item) {
+                            s += `<tr> <td>${item['customer_name']}</td><td> ${item['parent']}</td> <td> ${item['posting_date']}</td> <td> ${item['rate']}</td></tr>`
                         })
-                        s +='</table>'
-                        if(r.message.length > 0){
-                        msgprint(`<b>Rate Information of <u style="font-weight: bolder;font-size: 17px;">${d.item_name} </u> for last 5 sales</b>`
-                            +'<hr>'
-                            + s
-                        )
-                            }else {
-                            msgprint(__("Rates Not present"));
-                        }
+                        s += '</table>'
 
+                        var p = ''
+                        p = '<h5>Purchase Rates</h5>'
+                        p += '<table class="table table-dark table-bordered" style="color:#fff;"> <tr><th>Supplier</th><th>Invoice #</th><th>Posting Date</th><th>Rate</th></tr>'
+                        r.message.purchase_history.forEach(function (item) {
+                            p += `<tr> <td>${item['supplier_name']}</td><td> ${item['parent']}</td> <td> ${item['posting_date']}</td> <td> ${item['rate']}</td></tr>`
+                        })
+                        p += '</table>'
+
+                        frappe.msgprint({
+                            title: __(`Rates of <u style="font-weight: bolder;font-size: 17px;0">${d.item_name} </u> for last 5 sales and purchases:`),
+                            indicator: 'green',
+                            message: __(
+                                         s
+                                         + '<hr>'
+                                         + p
+                                       )
+                                     });
 
                     }
                 }
             });
-                }else {
-                    msgprint(__("Item Not selected"));
-                }
+        } else {
+            msgprint(__("Item Not selected"));
+        }
 
-            },
+    },
 
 
-
-        // CUSTOM FUNCTION TO FECTCH RECENT SOLD ITEMS END
+    // CUSTOM FUNCTION TO FECTCH RECENT SOLD ITEMS END
 });

@@ -628,4 +628,47 @@ frappe.ui.form.on("Purchase Invoice", {
 			});
 		}
 	},
-})
+});
+
+
+frappe.ui.form.on('Purchase Invoice Item', {
+
+    // CUSTOM FUNCTION TO FECTCH RECENT SOLD ITEMS
+    rates: function (frm, cdt, cdn) {
+        var d = locals[cdt][cdn];
+        if (d.item_code) {
+            frappe.call({
+                method: 'hlp1.white_listed_methods.fetch_recent_soled_items.fetch_recent_purchased_items',
+                args: {
+                    'item_code': d.item_code,
+                },
+                callback: function (r) {
+                    if (!r.exc) {
+                        var p = ''
+                        p = '<h5>Purchase Rates</h5>'
+                        p += '<table class="table table-dark table-bordered" style="color:#fff;"> <tr><th>Supplier</th><th>Invoice #</th><th>Posting Date</th><th>Rate</th></tr>'
+                        r.message.forEach(function (item) {
+                            p += `<tr> <td>${item['supplier_name']}</td><td> ${item['parent']}</td> <td> ${item['posting_date']}</td> <td> ${item['rate']}</td></tr>`
+                        })
+                        p += '</table>'
+
+                        frappe.msgprint({
+                            title: __(`Rates of <u style="font-weight: bolder;font-size: 17px;0">${d.item_name} </u> for last 5 purchases:`),
+                            indicator: 'green',
+                            message: __(
+                                        p
+                                       )
+                                     });
+
+                    }
+                }
+            });
+        } else {
+            msgprint(__("Item Not selected"));
+        }
+
+    },
+
+
+    // CUSTOM FUNCTION TO FECTCH RECENT SOLD ITEMS END
+});

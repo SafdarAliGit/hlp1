@@ -30,7 +30,8 @@ app_license = "MIT"
 
 # include js in doctype views
 # doctype_js = {"doctype" : "public/js/doctype.js"}
-doctype_js = {"Item" : "public/js/item.js", "Sales Invoice" : "public/js/sales_invoice.js", "Purchase Invoice" : "public/js/purchase_invoice.js"}
+doctype_js = {"Item": "public/js/item.js", "Sales Invoice": "public/js/sales_invoice.js",
+              "Purchase Invoice": "public/js/purchase_invoice.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -98,7 +99,9 @@ doctype_js = {"Item" : "public/js/item.js", "Sales Invoice" : "public/js/sales_i
 # override_doctype_class = {
 #	"ToDo": "custom_app.overrides.CustomToDo"
 # }
-
+override_doctype_class = {
+    "Purchase Invoice": "hlp1.overrides.purchase_invoice_overrides.PurchaseInvoiceOverrides"
+}
 # Document Events
 # ---------------
 # Hook on document methods and events
@@ -148,7 +151,7 @@ doctype_js = {"Item" : "public/js/item.js", "Sales Invoice" : "public/js/sales_i
 # generated from the base implementation of the doctype dashboard,
 # along with any modifications made in other Frappe apps
 # override_doctype_dashboards = {
-#	"Task": "hlp1.task.get_dashboard_data"
+# 	"Purchase Invoice": "hlp1.overrides.batch_dashboard_override.get_data"
 # }
 
 # exempt linked doctypes from being automatically cancelled

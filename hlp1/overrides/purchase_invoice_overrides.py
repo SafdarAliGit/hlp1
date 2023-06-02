@@ -9,8 +9,8 @@ class PurchaseInvoiceOverrides(PurchaseInvoice):
     def on_submit(self):
         super(PurchaseInvoice, self).on_submit()
         items = frappe.get_all("Purchase Invoice Item",
-                       filters={"parent":self.name},
-                       fields=["item_code","batch_id", "qty"])
+                               filters={"parent": self.name},
+                               fields=["item_code", "batch_id", "qty", "name"])
 
         for item in items:
             if item.batch_id:
@@ -20,8 +20,12 @@ class PurchaseInvoiceOverrides(PurchaseInvoice):
                 batch.batch_qty = item.qty
                 batch.insert()
 
-
-
-
-
-
+    def before_submit(self):
+        items = frappe.get_all("Purchase Invoice Item",
+                               filters={"parent": self.name},
+                               fields=["item_code", "batch_id", "qty", "name"])
+        for item in items:
+            if item.batch_id:
+                pii = frappe.get_doc("Purchase Invoice Item", item.name)
+                pii.set("batch_id", item.batch_id)
+                pii.save()

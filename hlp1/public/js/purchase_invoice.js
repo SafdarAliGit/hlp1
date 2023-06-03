@@ -506,6 +506,7 @@ cur_frm.fields_dict['items'].grid.get_field('project').get_query = function(doc,
 }
 
 frappe.ui.form.on("Purchase Invoice", {
+
 		// CUSTOM WORK
 	after_submit: function (frm) {
 		frappe.set_route("List", "Purchase Invoice");
@@ -634,6 +635,28 @@ frappe.ui.form.on("Purchase Invoice", {
 frappe.ui.form.on('Purchase Invoice Item', {
 
     // CUSTOM FUNCTION TO FECTCH RECENT SOLD ITEMS
+	// ADDING BATCH DOCTYPE
+batch_id:function(frm,cdt,cdn){
+
+  var d = locals[cdt][cdn];
+
+  frappe.call({
+    method: 'frappe.client.insert',
+    args: {
+      doc: {
+        doctype: 'Batch',
+        item: d.item_code,
+        batch_id: d.batch_id,
+		  batch_qty:d.qty
+      }
+    }
+  });
+frappe.model.set_value(cdt, cdn,'batch_no',d.batch_id);
+},
+
+
+
+	// ========================================
     rates: function (frm, cdt, cdn) {
         var d = locals[cdt][cdn];
         if (d.item_code) {
